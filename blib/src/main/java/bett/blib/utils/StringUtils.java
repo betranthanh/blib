@@ -9,6 +9,10 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+	public static String bett() {
+		return "bett";
+	}
+
     private StringUtils() {
         throw new AssertionError();
     }
