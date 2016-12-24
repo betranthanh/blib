@@ -129,8 +129,7 @@ public class Utils {
         ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
         ActivityManager activityManager = (ActivityManager) _context.getSystemService(Activity.ACTIVITY_SERVICE);
         activityManager.getMemoryInfo(mi);
-        long availableMegs = mi.availMem;
-        return availableMegs;
+        return mi.availMem;
     }
 
     public static void makeToast(Context context, String msg) {
@@ -254,11 +253,8 @@ public class Utils {
         }
     }
 
-    static LocationManager locationManager;
-    static Location location;
-    static double latitude, longitude;
-    static boolean isNetworkEnabled = false;
-    static boolean isGPSEnabled = false;
+    private static Location location;
+
     /**
      * using for getting your current location
      *
@@ -268,17 +264,19 @@ public class Utils {
     @SuppressWarnings("static-access")
     public static Location getCurrentLocation(Context context) {
         try {
-            locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
             // getting GPS status
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             // getting network status
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
 //                Common.showGPSDisabledAlert("Please enable your location or connect to cellular network.", context);
             } else {
+                double latitude;
+                double longitude;
                 if (isNetworkEnabled) {
                     if (locationManager != null) {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -337,8 +335,7 @@ public class Utils {
                 SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
                 dateTime.set(year, monthOfYear, dayOfMonth);
 
-                mTextView.setText(dateFormatter.format(dateTime.getTime())
-                        .toString());
+                mTextView.setText(dateFormatter.format(dateTime.getTime()));
             }
         }, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH),
                 dateTime.get(Calendar.DAY_OF_MONTH)).show();
@@ -361,8 +358,7 @@ public class Utils {
                 dateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 dateTime.set(Calendar.MINUTE, minute);
 
-                mTextView.setText(timeFormatter.format(dateTime.getTime())
-                        .toString());
+                mTextView.setText(timeFormatter.format(dateTime.getTime()));
             }
         }, dateTime.get(Calendar.HOUR_OF_DAY), dateTime.get(Calendar.MINUTE),
                 false).show();
@@ -387,7 +383,7 @@ public class Utils {
         if (milliseconds <= 0) {
             return "00-00-00";
         }
-        StringBuffer text = new StringBuffer("");
+        StringBuilder text = new StringBuilder("");
         if (milliseconds > HOUR) {
             if (milliseconds / HOUR >= 10) {
                 text.append(milliseconds / HOUR);
@@ -634,8 +630,6 @@ public class Utils {
             activity.sendBroadcast(mediaScanIntent);
 
             return file.getAbsolutePath();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

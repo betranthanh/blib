@@ -10,7 +10,7 @@ import com.google.gson.Gson;
  */
 public class PreferencesUtils {
     public static final String KEY_NEED_REFRESH = "KEY_NEED_REFRESH";
-    private static String PREFERENCE_NAME = "BeatMeCommon";
+    private static String PREFERENCE_NAME = "BLibCommon";
     private static final int KEY_MODE_PRIVATE = 0;
     public static final String KEY_LOGIN_INFO_DTO = "KEY_LOGIN_INFO_DTO";
     public static final String KEY_FRIST_USE = "KEY_FRIST_USE";

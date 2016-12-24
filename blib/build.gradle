@@ -1,6 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
+apply plugin: 'com.github.dcendents.android-maven' // ADD THIS
+//apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'maven-publish'
+
+group='com.github.betranthanh'
 
 android {
     compileSdkVersion 25
@@ -31,25 +34,25 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-publishing {
-    publications {
-        MyPublication(MavenPublication) {
-            artifact javadocJar
-            artifact sourcesJar
-            artifact file('build/outputs/aar/library-release.aar')
-            groupId group
-            artifactId 'blib'
-            version '1.0'
-        }
-    }
-}
+//publishing {
+//    publications {
+//        MyPublication(MavenPublication) {
+//            artifact javadocJar
+//            artifact sourcesJar
+//            artifact file('build/outputs/aar/library-release.aar')
+//            groupId group
+//            artifactId 'blib'
+//            version '1.0'
+//        }
+//    }
+//}
 
 // Bintray
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+/*Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())*/
 
 // To upload simply update the version everywhere , then run "gradlew bintrayUpload"
-bintray {
+/*bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
 
@@ -70,7 +73,7 @@ bintray {
             released = new Date()
         }
     }
-}
+}*/
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -86,6 +89,10 @@ dependencies {
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 
     compile 'com.facebook.fresco:fresco:1.0.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
 
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import bett.blib.instagram.util.StringUtil;
+import bett.blib.utils.StringUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TextView labelHello = (TextView) findViewById(R.id.labelHello);
-        labelHello.setText(StringUtils);
+        labelHello.setText(StringUtils.generateRandomString());
 
     }
 }
