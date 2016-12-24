@@ -1,0 +1,91 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            artifact javadocJar
+            artifact sourcesJar
+            artifact file('build/outputs/aar/library-release.aar')
+            groupId group
+            artifactId 'blib'
+            version '1.0'
+        }
+    }
+}
+
+// Bintray
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+// To upload simply update the version everywhere , then run "gradlew bintrayUpload"
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    publications = ['MyPublication']
+
+    pkg {
+        repo = 'maven'
+        name = 'blib'
+        licenses = ["Apache-2.0"]
+        vcsUrl = 'https://github.com/betranthanh/blib.git'
+        desc = 'BLibrary.'
+        websiteUrl = 'https://github.com/betranthanh/blib'
+        publicDownloadNumbers = true
+        publish = true
+        dryRun = false  //Whether to run this as dry-run, without deploying
+        version {
+            name = '1.0'
+            released = new Date()
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.orhanobut:logger:1.15'
+
+    compile 'com.github.castorflex.smoothprogressbar:library-circular:1.2.0'
+    compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
+
+    compile 'com.facebook.fresco:fresco:1.0.0'
+
+    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+}
